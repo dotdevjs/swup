@@ -3,7 +3,7 @@ import { classify, createHistoryRecord, fetch } from '../helpers';
 const loadPage = function(data, popstate) {
 	// CUSTOM
 	console.log('[Swup] check abort');
-	window.swupSignal && window.swupSignal.signal.abort();
+	window.swupSignal && window.swupSignal.abort();
 	window.swupSignal = new AbortController();
 
 	// create array for storing animation promises
