@@ -76,6 +76,12 @@ const loadPage = function(data, popstate) {
 					console.log('[Swup] response');
 					console.log(response.status);
 
+					// aborted
+					if (response.status === 0) {
+						resolve();
+						return;
+					}
+
 					if (response.status === 500) {
 						this.triggerEvent('serverError');
 						reject(data.url);
