@@ -1,5 +1,7 @@
 import { classify, createHistoryRecord, fetch } from '../helpers';
 
+const ABORTED_ID = '://aborted';
+
 const loadPage = function(data, popstate) {
 	// create array for storing animation promises
 	let animationPromises = [],
@@ -63,7 +65,6 @@ const loadPage = function(data, popstate) {
 		if (!this.preloadPromise || this.preloadPromise.route != data.url) {
 			xhrPromise = new Promise((resolve, reject) => {
 				// CUSTOM
-				console.log('[Swup] check abort');
 				window.swupSignal && window.swupSignal.abort();
 				window.swupSignal = new AbortController();
 
@@ -73,12 +74,9 @@ const loadPage = function(data, popstate) {
 					signal: window.swupSignal.signal
 				};
 				fetch(opts, (response) => {
-					console.log('[Swup] response');
-					console.log(response.status);
-
-					// aborted
+					// CUSTOM: abort request
 					if (response.status === 0) {
-						reject('://aborted');
+						reject(ABORTED_ID);
 						return;
 					}
 
@@ -115,7 +113,8 @@ const loadPage = function(data, popstate) {
 			this.preloadPromise = null;
 		})
 		.catch((errorUrl) => {
-			if (errorUrl === '://aborted') {
+			// CUSTOM: request was aborted, do noothing.
+			if (errorUrl === ABORTED_ID) {
 				return;
 			}
 

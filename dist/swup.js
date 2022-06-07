@@ -662,6 +662,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _helpers = __webpack_require__(0);
 
+var ABORTED_ID = '://aborted';
+
 var loadPage = function loadPage(data, popstate) {
 	var _this = this;
 
@@ -727,7 +729,6 @@ var loadPage = function loadPage(data, popstate) {
 		if (!this.preloadPromise || this.preloadPromise.route != data.url) {
 			xhrPromise = new Promise(function (resolve, reject) {
 				// CUSTOM
-				console.log('[Swup] check abort');
 				window.swupSignal && window.swupSignal.abort();
 				window.swupSignal = new AbortController();
 
@@ -736,12 +737,9 @@ var loadPage = function loadPage(data, popstate) {
 					signal: window.swupSignal.signal
 				});
 				(0, _helpers.fetch)(opts, function (response) {
-					console.log('[Swup] response');
-					console.log(response.status);
-
-					// aborted
+					// CUSTOM: abort request
 					if (response.status === 0) {
-						reject('://aborted');
+						reject(ABORTED_ID);
 						return;
 					}
 
@@ -776,7 +774,8 @@ var loadPage = function loadPage(data, popstate) {
 		_this.renderPage(_this.cache.getPage(data.url), popstate);
 		_this.preloadPromise = null;
 	}).catch(function (errorUrl) {
-		if (errorUrl === '://aborted') {
+		// CUSTOM: request was aborted, do noothing.
+		if (errorUrl === ABORTED_ID) {
 			return;
 		}
 
@@ -920,6 +919,7 @@ var fetch = function fetch(setOptions) {
 
 	var request = new XMLHttpRequest();
 
+	// CUSTOM
 	function abort() {
 		request.abort();
 	}
@@ -930,6 +930,7 @@ var fetch = function fetch(setOptions) {
 
 	request.onreadystatechange = function () {
 		if (request.readyState === 4) {
+			// CUSTOM
 			options.signal && options.signal.removeEventListener('abort', abort);
 
 			if (request.status !== 500) {
