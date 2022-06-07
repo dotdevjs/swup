@@ -662,10 +662,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _helpers = __webpack_require__(0);
 
-var controller = new AbortController();
-
 var loadPage = function loadPage(data, popstate) {
 	var _this = this;
+
+	// CUSTOM
+	console.log('[Swup] check abort');
+	window.swupSignal && window.swupSignal.signal.abort();
+	window.swupSignal = new AbortController();
 
 	// create array for storing animation promises
 	var animationPromises = [],
@@ -728,17 +731,12 @@ var loadPage = function loadPage(data, popstate) {
 	} else {
 		if (!this.preloadPromise || this.preloadPromise.route != data.url) {
 			xhrPromise = new Promise(function (resolve, reject) {
-				if (controller) {
-					console.log('[Swup] controller.abort()');
-					controller.abort();
-					controller = new AbortController();
-				}
 				var opts = _extends({}, data, {
 					headers: _this.options.requestHeaders,
-					signal: controller.signal
+					signal: window.swupSignal.signal
 				});
 				(0, _helpers.fetch)(opts, function (response) {
-					controller = undefined;
+					//window.swupSignal = new AbortController();
 					if (response.status === 500) {
 						_this.triggerEvent('serverError');
 						reject(data.url);
@@ -910,8 +908,18 @@ var fetch = function fetch(setOptions) {
 
 	var request = new XMLHttpRequest();
 
+	function abort() {
+		request.abort();
+	}
+
+	if (options.signal) {
+		options.signal.addEventListener('abort', abort);
+	}
+
 	request.onreadystatechange = function () {
 		if (request.readyState === 4) {
+			options.signal && options.signal.removeEventListener('abort', abort);
+
 			if (request.status !== 500) {
 				callback(request);
 			} else {
