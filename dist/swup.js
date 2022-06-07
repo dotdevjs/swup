@@ -667,7 +667,7 @@ var loadPage = function loadPage(data, popstate) {
 
 	// CUSTOM
 	console.log('[Swup] check abort');
-	window.swupSignal && window.swupSignal.signal.abort();
+	window.swupSignal && window.swupSignal.abort();
 	window.swupSignal = new AbortController();
 
 	// create array for storing animation promises
