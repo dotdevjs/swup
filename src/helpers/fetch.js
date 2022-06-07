@@ -13,8 +13,18 @@ const fetch = (setOptions, callback = false) => {
 
 	let request = new XMLHttpRequest();
 
+	function abort() {
+		request.abort();
+	}
+
+	if (options.signal) {
+		options.signal.addEventListener('abort', abort);
+	}
+
 	request.onreadystatechange = function() {
 		if (request.readyState === 4) {
+			options.signal && options.signal.removeEventListener('abort', abort);
+
 			if (request.status !== 500) {
 				callback(request);
 			} else {

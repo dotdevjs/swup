@@ -729,6 +729,7 @@ var loadPage = function loadPage(data, popstate) {
 		if (!this.preloadPromise || this.preloadPromise.route != data.url) {
 			xhrPromise = new Promise(function (resolve, reject) {
 				if (controller) {
+					console.log('[Swup] controller.abort()');
 					controller.abort();
 					controller = new AbortController();
 				}

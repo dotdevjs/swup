@@ -1,8 +1,11 @@
 import { classify, createHistoryRecord, fetch } from '../helpers';
 
-let controller = new AbortController();
-
 const loadPage = function(data, popstate) {
+	// CUSTOM
+	console.log('[Swup] check abort');
+	window.swupSignal && window.swupSignal.signal.abort();
+	window.swupSignal = new AbortController();
+
 	// create array for storing animation promises
 	let animationPromises = [],
 		xhrPromise;
@@ -64,18 +67,13 @@ const loadPage = function(data, popstate) {
 	} else {
 		if (!this.preloadPromise || this.preloadPromise.route != data.url) {
 			xhrPromise = new Promise((resolve, reject) => {
-				if (controller) {
-					console.log('[Swup] controller.abort()');
-					controller.abort();
-					controller = new AbortController();
-				}
 				const opts = {
 					...data,
 					headers: this.options.requestHeaders,
-					signal: controller.signal
+					signal: window.swupSignal.signal
 				};
 				fetch(opts, (response) => {
-					controller = undefined;
+					//window.swupSignal = new AbortController();
 					if (response.status === 500) {
 						this.triggerEvent('serverError');
 						reject(data.url);
