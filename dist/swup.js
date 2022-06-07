@@ -665,11 +665,6 @@ var _helpers = __webpack_require__(0);
 var loadPage = function loadPage(data, popstate) {
 	var _this = this;
 
-	// CUSTOM
-	console.log('[Swup] check abort');
-	window.swupSignal && window.swupSignal.abort();
-	window.swupSignal = new AbortController();
-
 	// create array for storing animation promises
 	var animationPromises = [],
 	    xhrPromise = void 0;
@@ -731,6 +726,11 @@ var loadPage = function loadPage(data, popstate) {
 	} else {
 		if (!this.preloadPromise || this.preloadPromise.route != data.url) {
 			xhrPromise = new Promise(function (resolve, reject) {
+				// CUSTOM
+				console.log('[Swup] check abort');
+				window.swupSignal && window.swupSignal.abort();
+				window.swupSignal = new AbortController();
+
 				var opts = _extends({}, data, {
 					headers: _this.options.requestHeaders,
 					signal: window.swupSignal.signal
