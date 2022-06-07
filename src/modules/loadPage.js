@@ -73,7 +73,9 @@ const loadPage = function(data, popstate) {
 					signal: window.swupSignal.signal
 				};
 				fetch(opts, (response) => {
-					//window.swupSignal = new AbortController();
+					console.log('[Swup] response');
+					console.log(response);
+
 					if (response.status === 500) {
 						this.triggerEvent('serverError');
 						reject(data.url);

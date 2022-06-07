@@ -736,7 +736,9 @@ var loadPage = function loadPage(data, popstate) {
 					signal: window.swupSignal.signal
 				});
 				(0, _helpers.fetch)(opts, function (response) {
-					//window.swupSignal = new AbortController();
+					console.log('[Swup] response');
+					console.log(response);
+
 					if (response.status === 500) {
 						_this.triggerEvent('serverError');
 						reject(data.url);
