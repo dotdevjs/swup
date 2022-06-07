@@ -74,7 +74,7 @@ const loadPage = function(data, popstate) {
 				};
 				fetch(opts, (response) => {
 					console.log('[Swup] response');
-					console.log(response);
+					console.log(response.status);
 
 					if (response.status === 500) {
 						this.triggerEvent('serverError');

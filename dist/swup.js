@@ -737,7 +737,7 @@ var loadPage = function loadPage(data, popstate) {
 				});
 				(0, _helpers.fetch)(opts, function (response) {
 					console.log('[Swup] response');
-					console.log(response);
+					console.log(response.status);
 
 					if (response.status === 500) {
 						_this.triggerEvent('serverError');
