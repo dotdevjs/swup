@@ -1,5 +1,7 @@
 import { classify, createHistoryRecord, fetch } from '../helpers';
 
+let controller = new AbortController();
+
 const loadPage = function(data, popstate) {
 	// create array for storing animation promises
 	let animationPromises = [],
@@ -62,7 +64,17 @@ const loadPage = function(data, popstate) {
 	} else {
 		if (!this.preloadPromise || this.preloadPromise.route != data.url) {
 			xhrPromise = new Promise((resolve, reject) => {
-				fetch({ ...data, headers: this.options.requestHeaders }, (response) => {
+				if (controller) {
+					controller.abort();
+					controller = new AbortController();
+				}
+				const opts = {
+					...data,
+					headers: this.options.requestHeaders,
+					signal: controller.signal
+				};
+				fetch(opts, (response) => {
+					controller = undefined;
 					if (response.status === 500) {
 						this.triggerEvent('serverError');
 						reject(data.url);

@@ -662,6 +662,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _helpers = __webpack_require__(0);
 
+var controller = new AbortController();
+
 var loadPage = function loadPage(data, popstate) {
 	var _this = this;
 
@@ -726,7 +728,16 @@ var loadPage = function loadPage(data, popstate) {
 	} else {
 		if (!this.preloadPromise || this.preloadPromise.route != data.url) {
 			xhrPromise = new Promise(function (resolve, reject) {
-				(0, _helpers.fetch)(_extends({}, data, { headers: _this.options.requestHeaders }), function (response) {
+				if (controller) {
+					controller.abort();
+					controller = new AbortController();
+				}
+				var opts = _extends({}, data, {
+					headers: _this.options.requestHeaders,
+					signal: controller.signal
+				});
+				(0, _helpers.fetch)(opts, function (response) {
+					controller = undefined;
 					if (response.status === 500) {
 						_this.triggerEvent('serverError');
 						reject(data.url);

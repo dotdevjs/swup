@@ -1,5 +1,5 @@
 {
-  "name": "swup",
+  "name": "@dotdev/swup",
   "version": "2.0.14",
   "description": "Complete, flexible, extensible and easy to use page transition library for your web.",
   "main": "lib/index.js",
