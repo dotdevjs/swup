@@ -741,7 +741,7 @@ var loadPage = function loadPage(data, popstate) {
 
 					// aborted
 					if (response.status === 0) {
-						resolve();
+						reject('://aborted');
 						return;
 					}
 
@@ -776,6 +776,10 @@ var loadPage = function loadPage(data, popstate) {
 		_this.renderPage(_this.cache.getPage(data.url), popstate);
 		_this.preloadPromise = null;
 	}).catch(function (errorUrl) {
+		if (errorUrl === '://aborted') {
+			return;
+		}
+
 		// rewrite the skipPopStateHandling function to redirect manually when the history.go is processed
 		_this.options.skipPopStateHandling = function () {
 			window.location = errorUrl;
