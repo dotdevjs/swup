@@ -932,6 +932,7 @@ var fetch = function fetch(setOptions) {
 	}
 
 	request.onreadystatechange = function () {
+		console.log('onreadystatechange', options.url, request.readyState);
 		if (request.readyState === 4) {
 			// CUSTOM
 			options.signal && options.signal.removeEventListener('abort', abort);
