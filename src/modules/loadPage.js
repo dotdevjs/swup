@@ -76,6 +76,7 @@ const loadPage = function(data, popstate) {
 				fetch(opts, (response) => {
 					// CUSTOM: abort request
 					if (response.status === 0) {
+						this.triggerEvent('serverError');
 						reject(ABORTED_ID);
 						return;
 					}
