@@ -2065,6 +2065,7 @@ var loadPage = function loadPage(data, popstate) {
 					// CUSTOM: abort request
 					if (response.status === 0) {
 						_this.cache.remove(data.url);
+						_this.triggerEvent('pageLoaded');
 						//this.triggerEvent('serverError');
 						reject(ABORTED_ID);
 						return;
