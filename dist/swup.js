@@ -739,7 +739,8 @@ var loadPage = function loadPage(data, popstate) {
 				(0, _helpers.fetch)(opts, function (response) {
 					// CUSTOM: abort request
 					if (response.status === 0) {
-						_this.triggerEvent('serverError');
+						_this.cache.remove(data.url);
+						//this.triggerEvent('serverError');
 						reject(ABORTED_ID);
 						return;
 					}
@@ -777,7 +778,6 @@ var loadPage = function loadPage(data, popstate) {
 	}).catch(function (errorUrl) {
 		// CUSTOM: request was aborted, do noothing.
 		if (errorUrl === ABORTED_ID) {
-			//this.cache.remove(data.url);
 			return;
 		}
 
