@@ -12,6 +12,7 @@ const fetch = (setOptions, callback = false) => {
 	};
 
 	let request = new XMLHttpRequest();
+	request.timeout = 30000; // time in milliseconds
 
 	// CUSTOM
 	function abort() {

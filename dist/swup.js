@@ -920,6 +920,7 @@ var fetch = function fetch(setOptions) {
 	var options = _extends({}, defaults, setOptions);
 
 	var request = new XMLHttpRequest();
+	request.timeout = 30000; // time in milliseconds
 
 	// CUSTOM
 	function abort() {
