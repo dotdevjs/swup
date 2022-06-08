@@ -776,6 +776,8 @@ var loadPage = function loadPage(data, popstate) {
 	}).catch(function (errorUrl) {
 		// CUSTOM: request was aborted, do noothing.
 		if (errorUrl === ABORTED_ID) {
+			_this.cache.remove(data.url);
+			_this.preloadPromise = null;
 			return;
 		}
 

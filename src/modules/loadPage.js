@@ -115,6 +115,8 @@ const loadPage = function(data, popstate) {
 		.catch((errorUrl) => {
 			// CUSTOM: request was aborted, do noothing.
 			if (errorUrl === ABORTED_ID) {
+				this.cache.remove(data.url);
+				this.preloadPromise = null;
 				return;
 			}
 
