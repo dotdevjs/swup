@@ -53,11 +53,12 @@ const loadPage = function(data, popstate) {
 	}
 
 	// start/skip animation
-	if (!popstate || this.options.animateHistoryBrowsing) {
-		animateOut();
-	} else {
-		this.triggerEvent('animationSkipped');
-	}
+	// if (!popstate || this.options.animateHistoryBrowsing) {
+	// 	animateOut();
+	// } else {
+	// 	this.triggerEvent('animationSkipped');
+	// }
+	this.triggerEvent('animationSkipped');
 
 	// start/skip loading of page
 	if (this.cache.exists(data.url)) {
