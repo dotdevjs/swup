@@ -2000,22 +2000,22 @@ var loadPage = function loadPage(data, popstate) {
 	console.log('loadPage', data.url, popstate);
 
 	var animateOut = function animateOut() {
-		_this.triggerEvent('animationOutStart');
+		// this.triggerEvent('animationOutStart');
 
-		// handle classes
-		document.documentElement.classList.add('is-changing');
-		document.documentElement.classList.add('is-leaving');
-		document.documentElement.classList.add('is-animating');
-		if (popstate) {
-			document.documentElement.classList.add('is-popstate');
-		}
-		document.documentElement.classList.add('to-' + (0, _helpers.classify)(data.url));
+		// // handle classes
+		// document.documentElement.classList.add('is-changing');
+		// document.documentElement.classList.add('is-leaving');
+		// document.documentElement.classList.add('is-animating');
+		// if (popstate) {
+		// 	document.documentElement.classList.add('is-popstate');
+		// }
+		// document.documentElement.classList.add('to-' + classify(data.url));
 
-		// animation promise stuff
-		animationPromises = _this.getAnimationPromises('out');
-		Promise.all(animationPromises).then(function () {
-			_this.triggerEvent('animationOutDone');
-		});
+		// // animation promise stuff
+		// animationPromises = this.getAnimationPromises('out');
+		// Promise.all(animationPromises).then(() => {
+		// 	this.triggerEvent('animationOutDone');
+		// });
 
 		// create history record if this is not a popstate call
 		if (!popstate) {
@@ -2042,12 +2042,12 @@ var loadPage = function loadPage(data, popstate) {
 	}
 
 	// start/skip animation
-	// if (!popstate || this.options.animateHistoryBrowsing) {
-	// 	animateOut();
-	// } else {
-	// 	this.triggerEvent('animationSkipped');
-	// }
-	this.triggerEvent('animationSkipped');
+	if (!popstate || this.options.animateHistoryBrowsing) {
+		animateOut();
+	} else {
+		this.triggerEvent('animationSkipped');
+	}
+	// this.triggerEvent('animationSkipped');
 
 	// start/skip loading of page
 	if (this.cache.exists(data.url)) {
