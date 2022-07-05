@@ -2047,7 +2047,6 @@ var loadPage = function loadPage(data, popstate) {
 	} else {
 		this.triggerEvent('animationSkipped');
 	}
-	// this.triggerEvent('animationSkipped');
 
 	// start/skip loading of page
 	if (this.cache.exists(data.url)) {
@@ -2071,7 +2070,7 @@ var loadPage = function loadPage(data, popstate) {
 					if (response.status === 0) {
 						console.log('[loadPage] aborted', data.url);
 						_this.cache.remove(data.url);
-						_this.triggerEvent('transitionEnd', popstate);
+						//this.triggerEvent('transitionEnd', popstate);
 						reject(ABORTED_ID);
 						return;
 					}

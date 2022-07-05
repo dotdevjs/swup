@@ -58,7 +58,6 @@ const loadPage = function(data, popstate) {
 	} else {
 		this.triggerEvent('animationSkipped');
 	}
-	// this.triggerEvent('animationSkipped');
 
 	// start/skip loading of page
 	if (this.cache.exists(data.url)) {
@@ -83,7 +82,7 @@ const loadPage = function(data, popstate) {
 					if (response.status === 0) {
 						console.log('[loadPage] aborted', data.url);
 						this.cache.remove(data.url);
-						this.triggerEvent('transitionEnd', popstate);
+						//this.triggerEvent('transitionEnd', popstate);
 						reject(ABORTED_ID);
 						return;
 					}
