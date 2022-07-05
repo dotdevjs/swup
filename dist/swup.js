@@ -2103,12 +2103,9 @@ var loadPage = function loadPage(data, popstate) {
 	// when everything is ready, handle the outcome
 	Promise.all(animationPromises.concat([xhrPromise])).then(function () {
 		// render page
-		console.log('render page', data.url, _this.cache.getPage(data.url), popstate);
+		console.log('render page', data.url, popstate);
 		_this.renderPage(_this.cache.getPage(data.url), popstate);
 		_this.preloadPromise = null;
-		// renderTimeout && clearTimeout(renderTimeout);
-		// renderTimeout = setTimeout(() => {
-		// });
 	}).catch(function (errorUrl) {
 		// CUSTOM: request was aborted, do noothing.
 		if (errorUrl === ABORTED_ID) {
