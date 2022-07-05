@@ -108,31 +108,32 @@ const loadPage = function(data, popstate) {
 		}
 	}
 
-		// when everything is ready, handle the outcome
-		await Promise.all(animationPromises.concat([xhrPromise]))
-			.then(() => {
-				renderTimeout && clearTimeout(renderTimeout);
-				renderTimeout = setTimeout(async () => {
-					// render page
-					this.renderPage(this.cache.getPage(data.url), popstate);
-					this.preloadPromise = null;
-				});
-			})
-			.catch((errorUrl) => {
-				// CUSTOM: request was aborted, do noothing.
-				if (errorUrl === ABORTED_ID) {
-					return;
-				}
-
-				// rewrite the skipPopStateHandling function to redirect manually when the history.go is processed
-				this.options.skipPopStateHandling = function() {
-					window.location = errorUrl;
-					return true;
-				};
-
-				// go back to the actual page were still at
-				window.history.go(-1);
+	// when everything is ready, handle the outcome
+	Promise.all(animationPromises.concat([xhrPromise]))
+		.then(() => {
+			renderTimeout && clearTimeout(renderTimeout);
+			renderTimeout = setTimeout(() => {
+				// render page
+				this.renderPage(this.cache.getPage(data.url), popstate);
+				this.preloadPromise = null;
 			});
+		})
+		.catch((errorUrl) => {
+			// CUSTOM: request was aborted, do noothing.
+			if (errorUrl === ABORTED_ID) {
+				// renderTimeout && clearTimeout(renderTimeout);
+				return;
+			}
+
+			// rewrite the skipPopStateHandling function to redirect manually when the history.go is processed
+			this.options.skipPopStateHandling = function() {
+				window.location = errorUrl;
+				return true;
+			};
+
+			// go back to the actual page were still at
+			window.history.go(-1);
+		});
 };
 
 export default loadPage;
