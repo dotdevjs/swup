@@ -1987,7 +1987,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _helpers = __webpack_require__(2);
 
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 var ABORTED_ID = '://aborted';
+var renderTimeout = void 0;
 
 var loadPage = function loadPage(data, popstate) {
 	var _this = this;
@@ -2095,26 +2098,40 @@ var loadPage = function loadPage(data, popstate) {
 		}
 	}
 
-	// when everything is ready, handle the outcome
-	Promise.all(animationPromises.concat([xhrPromise])).then(function () {
-		// render page
-		_this.renderPage(_this.cache.getPage(data.url), popstate);
-		_this.preloadPromise = null;
-	}).catch(function (errorUrl) {
-		// CUSTOM: request was aborted, do noothing.
-		if (errorUrl === ABORTED_ID) {
-			return;
-		}
+	renderTimeout && clearTimeout(renderTimeout);
+	renderTimeout = setTimeout(_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+		return regeneratorRuntime.wrap(function _callee$(_context) {
+			while (1) {
+				switch (_context.prev = _context.next) {
+					case 0:
+						_context.next = 2;
+						return Promise.all(animationPromises.concat([xhrPromise])).then(function () {
+							// render page
+							_this.renderPage(_this.cache.getPage(data.url), popstate);
+							_this.preloadPromise = null;
+						}).catch(function (errorUrl) {
+							// CUSTOM: request was aborted, do noothing.
+							if (errorUrl === ABORTED_ID) {
+								return;
+							}
 
-		// rewrite the skipPopStateHandling function to redirect manually when the history.go is processed
-		_this.options.skipPopStateHandling = function () {
-			window.location = errorUrl;
-			return true;
-		};
+							// rewrite the skipPopStateHandling function to redirect manually when the history.go is processed
+							_this.options.skipPopStateHandling = function () {
+								window.location = errorUrl;
+								return true;
+							};
 
-		// go back to the actual page were still at
-		window.history.go(-1);
-	});
+							// go back to the actual page were still at
+							window.history.go(-1);
+						});
+
+					case 2:
+					case 'end':
+						return _context.stop();
+				}
+			}
+		}, _callee, _this);
+	})));
 };
 
 exports.default = loadPage;
