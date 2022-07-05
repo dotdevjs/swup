@@ -87,19 +87,19 @@ const loadPage = function(data, popstate) {
 						this.triggerEvent('serverError');
 						reject(data.url);
 						return;
-					} else {
-						// get json data
-						let page = this.getPageData(response);
-						if (page != null) {
-							page.url = data.url;
-						} else {
-							reject(data.url);
-							return;
-						}
-						// render page
-						this.cache.cacheUrl(page);
-						this.triggerEvent('pageLoaded');
 					}
+
+					// get json data
+					let page = this.getPageData(response);
+					if (page != null) {
+						page.url = data.url;
+					} else {
+						reject(data.url);
+						return;
+					}
+					// render page
+					this.cache.cacheUrl(page);
+					this.triggerEvent('pageLoaded');
 					resolve();
 				});
 			});
@@ -111,12 +111,13 @@ const loadPage = function(data, popstate) {
 	// when everything is ready, handle the outcome
 	Promise.all(animationPromises.concat([xhrPromise]))
 		.then(() => {
-			renderTimeout && clearTimeout(renderTimeout);
-			renderTimeout = setTimeout(() => {
-				// render page
-				this.renderPage(this.cache.getPage(data.url), popstate);
-				this.preloadPromise = null;
-			});
+			// render page
+			console.log('render page', data.url, this.cache.getPage(data.url), popstate);
+			this.renderPage(this.cache.getPage(data.url), popstate);
+			this.preloadPromise = null;
+			// renderTimeout && clearTimeout(renderTimeout);
+			// renderTimeout = setTimeout(() => {
+			// });
 		})
 		.catch((errorUrl) => {
 			// CUSTOM: request was aborted, do noothing.
