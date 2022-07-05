@@ -2067,6 +2067,7 @@ var loadPage = function loadPage(data, popstate) {
 					if (response.status === 0) {
 						console.log('[loadPage] aborted', data.url);
 						_this.cache.remove(data.url);
+						_this.triggerEvent('transitionEnd', popstate);
 						reject(ABORTED_ID);
 						return;
 					}
@@ -2075,19 +2076,19 @@ var loadPage = function loadPage(data, popstate) {
 						_this.triggerEvent('serverError');
 						reject(data.url);
 						return;
-					} else {
-						// get json data
-						var page = _this.getPageData(response);
-						if (page != null) {
-							page.url = data.url;
-						} else {
-							reject(data.url);
-							return;
-						}
-						// render page
-						_this.cache.cacheUrl(page);
-						_this.triggerEvent('pageLoaded');
 					}
+
+					// get json data
+					var page = _this.getPageData(response);
+					if (page != null) {
+						page.url = data.url;
+					} else {
+						reject(data.url);
+						return;
+					}
+					// render page
+					_this.cache.cacheUrl(page);
+					_this.triggerEvent('pageLoaded');
 					resolve();
 				});
 			});
@@ -2098,12 +2099,13 @@ var loadPage = function loadPage(data, popstate) {
 
 	// when everything is ready, handle the outcome
 	Promise.all(animationPromises.concat([xhrPromise])).then(function () {
-		renderTimeout && clearTimeout(renderTimeout);
-		renderTimeout = setTimeout(function () {
-			// render page
-			_this.renderPage(_this.cache.getPage(data.url), popstate);
-			_this.preloadPromise = null;
-		});
+		// render page
+		console.log('render page', data.url, _this.cache.getPage(data.url), popstate);
+		_this.renderPage(_this.cache.getPage(data.url), popstate);
+		_this.preloadPromise = null;
+		// renderTimeout && clearTimeout(renderTimeout);
+		// renderTimeout = setTimeout(() => {
+		// });
 	}).catch(function (errorUrl) {
 		// CUSTOM: request was aborted, do noothing.
 		if (errorUrl === ABORTED_ID) {
@@ -5810,9 +5812,8 @@ var renderPage = function renderPage(page, popstate) {
 				}
 			});
 		});
-	} else {
-		this.triggerEvent('transitionEnd', popstate);
-	}
+	} else {}
+	this.triggerEvent('transitionEnd', popstate);
 
 	// reset scroll-to element
 	this.scrollToElement = null;
