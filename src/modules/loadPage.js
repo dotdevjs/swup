@@ -1,6 +1,7 @@
 import { classify, createHistoryRecord, fetch } from '../helpers';
 
 const ABORTED_ID = '://aborted';
+let renderTimeout;
 
 const loadPage = function(data, popstate) {
 	// create array for storing animation promises
@@ -107,28 +108,31 @@ const loadPage = function(data, popstate) {
 		}
 	}
 
-	// when everything is ready, handle the outcome
-	Promise.all(animationPromises.concat([xhrPromise]))
-		.then(() => {
-			// render page
-			this.renderPage(this.cache.getPage(data.url), popstate);
-			this.preloadPromise = null;
-		})
-		.catch((errorUrl) => {
-			// CUSTOM: request was aborted, do noothing.
-			if (errorUrl === ABORTED_ID) {
-				return;
-			}
+	renderTimeout && clearTimeout(renderTimeout);
+	renderTimeout = setTimeout(async () => {
+		// when everything is ready, handle the outcome
+		await Promise.all(animationPromises.concat([xhrPromise]))
+			.then(() => {
+				// render page
+				this.renderPage(this.cache.getPage(data.url), popstate);
+				this.preloadPromise = null;
+			})
+			.catch((errorUrl) => {
+				// CUSTOM: request was aborted, do noothing.
+				if (errorUrl === ABORTED_ID) {
+					return;
+				}
 
-			// rewrite the skipPopStateHandling function to redirect manually when the history.go is processed
-			this.options.skipPopStateHandling = function() {
-				window.location = errorUrl;
-				return true;
-			};
+				// rewrite the skipPopStateHandling function to redirect manually when the history.go is processed
+				this.options.skipPopStateHandling = function() {
+					window.location = errorUrl;
+					return true;
+				};
 
-			// go back to the actual page were still at
-			window.history.go(-1);
-		});
+				// go back to the actual page were still at
+				window.history.go(-1);
+			});
+	});
 };
 
 export default loadPage;
