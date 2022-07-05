@@ -116,12 +116,9 @@ const loadPage = function(data, popstate) {
 	Promise.all(animationPromises.concat([xhrPromise]))
 		.then(() => {
 			// render page
-			console.log('render page', data.url, this.cache.getPage(data.url), popstate);
+			console.log('render page', data.url, popstate);
 			this.renderPage(this.cache.getPage(data.url), popstate);
 			this.preloadPromise = null;
-			// renderTimeout && clearTimeout(renderTimeout);
-			// renderTimeout = setTimeout(() => {
-			// });
 		})
 		.catch((errorUrl) => {
 			// CUSTOM: request was aborted, do noothing.
