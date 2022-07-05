@@ -79,6 +79,7 @@ const loadPage = function(data, popstate) {
 					if (response.status === 0) {
 						console.log('[loadPage] aborted', data.url);
 						this.cache.remove(data.url);
+						this.triggerEvent('transitionEnd', popstate);
 						reject(ABORTED_ID);
 						return;
 					}
