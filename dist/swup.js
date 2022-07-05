@@ -1996,6 +1996,9 @@ var loadPage = function loadPage(data, popstate) {
 	// create array for storing animation promises
 	var animationPromises = [],
 	    xhrPromise = void 0;
+
+	console.log('loadPage', data.url, popstate);
+
 	// const animateOut = () => {
 	// 	this.triggerEvent('animationOutStart');
 
@@ -5812,8 +5815,9 @@ var renderPage = function renderPage(page, popstate) {
 				}
 			});
 		});
-	} else {}
-	this.triggerEvent('transitionEnd', popstate);
+	} else {
+		this.triggerEvent('transitionEnd', popstate);
+	}
 
 	// reset scroll-to element
 	this.scrollToElement = null;

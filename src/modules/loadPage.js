@@ -7,6 +7,9 @@ const loadPage = function(data, popstate) {
 	// create array for storing animation promises
 	let animationPromises = [],
 		xhrPromise;
+
+	console.log('loadPage', data.url, popstate);
+
 	// const animateOut = () => {
 	// 	this.triggerEvent('animationOutStart');
 

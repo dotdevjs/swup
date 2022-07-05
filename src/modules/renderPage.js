@@ -71,8 +71,8 @@ const renderPage = function(page, popstate) {
 			});
 		});
 	} else {
+		this.triggerEvent('transitionEnd', popstate);
 	}
-	this.triggerEvent('transitionEnd', popstate);
 
 	// reset scroll-to element
 	this.scrollToElement = null;
