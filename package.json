@@ -20,6 +20,9 @@
     "type": "git",
     "url": "https://github.com/dotdevjs/swup.git"
   },
+  "publishConfig": {
+    "registry": "https://npm.dotdevio.com"
+  },
   "keywords": [
     "css",
     "animation",
