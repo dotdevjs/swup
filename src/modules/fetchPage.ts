@@ -3,6 +3,12 @@ import { fetch } from '../helpers.js';
 import { TransitionOptions } from './loadPage.js';
 import { PageRecord } from './Cache.js';
 
+declare global {
+	interface Window {
+		swupAbortController?: any;
+	}
+}
+
 export function fetchPage(this: Swup, data: TransitionOptions): Promise<PageRecord> {
 	const headers = this.options.requestHeaders;
 	const { url } = data;
@@ -12,8 +18,12 @@ export function fetchPage(this: Swup, data: TransitionOptions): Promise<PageReco
 		return Promise.resolve(this.cache.getPage(url));
 	}
 
+	// CUSTOM
+	window.swupAbortController && window.swupAbortController.abort();
+	window.swupAbortController = new AbortController();
+
 	return new Promise((resolve, reject) => {
-		fetch({ ...data, headers }, (response) => {
+		fetch({ ...data, headers, signal: window.swupAbortController.signal }, (response) => {
 			if (response.status === 500) {
 				this.triggerEvent('serverError');
 				reject(url);

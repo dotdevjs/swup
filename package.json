@@ -61,7 +61,7 @@
     "transition"
   ],
   "dependencies": {
-    "axios": "^0.27.2",
+    "axios": "^1.4.0",
     "delegate-it": "^6.0.0",
     "opencollective-postinstall": "^2.0.2"
   },
