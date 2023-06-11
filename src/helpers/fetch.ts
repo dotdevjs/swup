@@ -4,7 +4,9 @@ import { AxiosResponse } from 'axios';
 import { TransitionOptions } from '../modules/loadPage.js';
 import { Options } from '../Swup.js';
 
-type FetchOptionsType = TransitionOptions & { headers: Options['requestHeaders'] } & { signal?: AbortController['signal'] };
+type FetchOptionsType = TransitionOptions & { headers: Options['requestHeaders'] } & {
+	signal?: AbortController['signal'];
+};
 
 export const fetch = (setOptions: FetchOptionsType, callback: (request: any) => void) => {
 	let defaults = {
@@ -26,11 +28,11 @@ export const fetch = (setOptions: FetchOptionsType, callback: (request: any) => 
 		data: options.data,
 		signal: options.signal
 	})
-		.then(function(response: AxiosResponse) {
+		.then(function (response: AxiosResponse) {
 			//console.log('[axios] success', response);
 			callback(response.request);
 		})
-		.catch(function(error) {
+		.catch(function (error) {
 			//console.log('[axios] Error', error);
 			if (error.response) {
 				callback(error.response.request);
